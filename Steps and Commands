@@ -1,0 +1,29 @@
+------------------------------------------------->VPC-with-servers-in-private-subnets-and-NAT Gateway<-----------------------------------------------------
+
+create the vpc by give configuration.
+it will create the one public subnet and private subnet in two avaliability zones.
+create auto scalling group in private subnet and provide created vpc and port that are require like ssh. Select instances in private instaces.
+create the another instance seperatly that is bastian host form it we can login to private instances.
+open the bastian ec2 and get the public ip adress.
+use the scp command that is securely vopy command.
+i am copying my pem file from my personal laptop to bastian ubuntu ec2 instances.
+frist of all change directory to file location by using "cd" command.
+Ubuntu commnad: "scp -i /Home/rajkumar/Downloads/aws_login.pem /Home/rajkumar/Downloads/aws_login.pem ubuntu@52.23.193.131"-->bastian public ip address:/home/ubuntu.
+After Coping the file to Bastian Host, login to it by using command
+Command: "ssh -i aws_login.pem ubuntu@52.23.193.131"-->public ip adress
+for listing pem file in bastian host use "ls" command.
+Next log into any of other instances in private network.
+take the private id adress of anyone private instaces to login from bastian instance.
+use command: "ssh -i aws_login.pem ubuntu@0.0.140.109-->private ip address.
+you can able to login to private instance from bastian by using above command.
+After that create files in that instace in Linux Command.
+The "touch" command is used to create an empty file or update the timestamps of existing files. If the file doesn't exist, touch will create it.
+You can also create a file and write content into it using the "echo" command and redirecting the output using > operator.
+After running this command, you can type the content you want to add to the file. Press "Ctrl + D" to save and exit.
+You can use text editors like "vi" or "vim" to create and edit files.
+run the python server in instance
+command: "python3 -m htto.server 8000".
+create the load balancer with ipv4 and provide the vpc that created , avaliable for both avalibility zones.
+Create the new security group that you can define your own port numbers. That allows ssh traffic and port 8000 trafic.
+so load balancer will allow only when the security groups  allows traffic on the listener port..
+you need to create a Target Group where you can define  which instances accessible
