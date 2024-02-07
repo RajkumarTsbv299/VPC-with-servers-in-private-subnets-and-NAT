@@ -1,0 +1,58 @@
+To achieve the desired setup described in your scenario, you'll need to execute a series of steps in AWS using various services
+such as EC2, VPC, Auto Scaling Groups, NAT Gateway, Bastion Host, SCP, SSH, and Load Balancer. Below is an outline of the steps you need to follow:
+
+---->Create a VPC with public and private subnets:
+Choose two availability zones.
+Create a VPC with CIDR block.
+Create an Internet Gateway and attach it to the VPC.
+Create a public subnet in each availability zone with a route table that routes traffic to the Internet Gateway.
+Create a private subnet in each availability zone with a route table that routes traffic to a NAT Gateway.
+
+---->Create an Auto Scaling Group in the private subnet:
+Select the appropriate AMI for your instances.
+Configure security groups to allow necessary traffic (e.g., SSH).
+Set up an Auto Scaling Group with desired capacity, minimum and maximum size, and health check settings.
+Ensure instances are launched in the private subnet.
+
+---->Create a Bastion Host:
+Launch an EC2 instance in the public subnet.
+Use a security group that allows SSH access from your IP address.
+Assign an Elastic IP to the Bastion Host (optional but recommended for static access).
+Configure SSH access using your .pem file.
+
+---->Copy .pem file to Bastion Host using SCP:
+Open terminal on your local machine.
+Navigate to the directory containing your .pem file.
+Use SCP to securely copy the file to the Bastion Host:
+command:
+"scp -i /path/to/your/aws_login.pem /path/to/your/aws_login.pem ubuntu@bastion_public_ip:/home/ubuntu/"
+
+---->SSH into Bastion Host and then into private instances:
+SSH into the Bastion Host using the .pem file:
+command:
+"ssh -i /path/to/your/aws_login.pem ubuntu@bastion_public_ip"
+From the Bastion Host, SSH into any private instance using its private IP:
+command:
+"ssh -i /path/to/your/aws_login.pem ubuntu@private_instance_private_ip"
+
+---->Create files on the private instances:
+Use commands like touch, echo, or text editors like vi or vim to create and
+edit files on the private instances.
+
+---->Run a Python server on one of the instances:
+Navigate to the directory where your files are located.
+Run the Python HTTP server:
+command:
+"python3 -m http.server 8000"
+
+---->Create a Load Balancer:
+Configure the Load Balancer with listeners (e.g., port 80 for HTTP).
+Specify the VPC and subnets.
+Create a target group and register instances from your Auto Scaling Group.
+Set up Security Groups:
+
+Create a new security group for the Load Balancer that allows traffic on port 80 (or your desired port).
+Allow SSH traffic from the Bastion Host's security group to the private instances.
+By following these steps, you'll create a VPC with public and private subnets, set up an Auto Scaling Group for your private instances, 
+create a Bastion Host for SSH access, copy files securely to the Bastion Host, and access the private instances through the Bastion Host. Finally, 
+you'll configure a Load Balancer for distributing traffic and set up security groups to control network access.
